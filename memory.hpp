@@ -88,11 +88,11 @@ public:
         return ::ReadProcessMemory(processHandle, reinterpret_cast<const void*>(address), buffer, size, &bytesRead);
     }
 
-    template <typename T>
-    void Write(const std::uintptr_t address, const T& value) const noexcept
-    {
-        ::WriteProcessMemory(processHandle, reinterpret_cast<void*>(address), &value, sizeof(T), NULL);
-    }
+   //template <typename T>
+   //void Write(const std::uintptr_t address, const T& value) const noexcept
+   //{
+   //    ::WriteProcessMemory(processHandle, reinterpret_cast<void*>(address), &value, sizeof(T), NULL);
+   //}
 };
 
 inline std::unique_ptr<Memory> memory = std::make_unique<Memory>();

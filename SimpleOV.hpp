@@ -9,9 +9,6 @@
 #include <thread>
 #include <chrono>
 
-// DX11 SDK -> https://www.microsoft.com/en-us/download/details.aspx?id=6812
-// Linker -> Input "d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)"
-
 extern "C" {
     __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
     __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
@@ -19,7 +16,7 @@ extern "C" {
 
 namespace overlay
 {
-    // ** var
+    // Variables
     HWND Window;
     WNDCLASSEXA wcex;
 
@@ -29,11 +26,11 @@ namespace overlay
     static ID3D11Device* g_pd3dDevice = nullptr;
     static ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
     static IDXGISwapChain* g_pSwapChain = nullptr;
-    static bool                     g_SwapChainOccluded = false;
+    static bool g_SwapChainOccluded = false;
     static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
     static bool ShouldQuit;
     static HANDLE waitableObject = nullptr;
-    static bool vsync = false;
+    static bool vsync = true;
 
     VOID CreateRenderTarget();
     VOID SetupWindow();
@@ -47,17 +44,14 @@ namespace overlay
 void overlay::CreateRenderTarget()
 {
     ID3D11Texture2D* pBackBuffer;
-    overlay::g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
-    if (pBackBuffer) {
-        overlay::g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &overlay::g_mainRenderTargetView);
-    }
+    g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+    g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_mainRenderTargetView);
     pBackBuffer->Release();
 }
 
 bool overlay::CreateDeviceD3D(HWND hWnd)
 {
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory(&sd, sizeof(sd));
+    DXGI_SWAP_CHAIN_DESC sd{};
     sd.BufferCount = 2;
     sd.BufferDesc.Width = 0;
     sd.BufferDesc.Height = 0;
@@ -74,20 +68,21 @@ bool overlay::CreateDeviceD3D(HWND hWnd)
 
     UINT createDeviceFlags = 0;
     D3D_FEATURE_LEVEL featureLevel;
-    const D3D_FEATURE_LEVEL featureLevelArray[2] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0, };
+    const D3D_FEATURE_LEVEL featureLevelArray[2] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0 };
     HRESULT res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &featureLevel, &g_pd3dDeviceContext);
-    if (res == DXGI_ERROR_UNSUPPORTED)
+    if (res == DXGI_ERROR_UNSUPPORTED) {
         res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, createDeviceFlags, featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &featureLevel, &g_pd3dDeviceContext);
-    if (res != S_OK)
+    }
+    if (FAILED(res)) {
         return false;
+    }
 
     overlay::CreateRenderTarget();
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.IniFilename = NULL;
-
+    ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = nullptr; 
     ImGui_ImplWin32_Init(overlay::Window);
     ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
@@ -108,17 +103,16 @@ void overlay::SetupWindow()
         LoadCursor(nullptr, IDC_ARROW),
         nullptr,
         nullptr,
-        ("ovh"),
-        NULL    
+        "ovh",
+        nullptr
     };
 
     RECT Rect;
-
     GetWindowRect(GetDesktopWindow(), &Rect);
 
     RegisterClassExA(&wcex);
 
-    overlay::Window = CreateWindowExA(NULL, ("ovh"), ("ovh"), WS_POPUP, Rect.left, Rect.top, Rect.right, Rect.bottom, NULL, NULL, wcex.hInstance, NULL);
+    overlay::Window = CreateWindowExA(NULL, "ovh", "ovh", WS_POPUP, Rect.left, Rect.top, Rect.right, Rect.bottom, NULL, NULL, wcex.hInstance, NULL);
     SetWindowLong(overlay::Window, GWL_EXSTYLE, WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW);
     SetLayeredWindowAttributes(overlay::Window, RGB(0, 0, 0), 255, NULL);
 
@@ -128,6 +122,7 @@ void overlay::SetupWindow()
     ShowWindow(overlay::Window, SW_SHOW);
     UpdateWindow(overlay::Window);
 }
+
 void overlay::CleanupDeviceD3D()
 {
     if (overlay::g_mainRenderTargetView) { overlay::g_mainRenderTargetView->Release(); overlay::g_mainRenderTargetView = nullptr; }
@@ -135,6 +130,7 @@ void overlay::CleanupDeviceD3D()
     if (overlay::g_pd3dDeviceContext) { overlay::g_pd3dDeviceContext->Release(); overlay::g_pd3dDeviceContext = nullptr; }
     if (overlay::g_pd3dDevice) { overlay::g_pd3dDevice->Release(); overlay::g_pd3dDevice = nullptr; }
 }
+
 void overlay::CloseOverlay()
 {
     ImGui_ImplDX11_Shutdown();
@@ -152,13 +148,13 @@ VOID overlay::Render()
     {
         ::TranslateMessage(&msg);
         ::DispatchMessage(&msg);
-        if (msg.message == WM_QUIT)
+        if (msg.message == WM_QUIT) {
             overlay::ShouldQuit = true;
+        }
     }
-    if (overlay::ShouldQuit)
-    {
+    if (overlay::ShouldQuit) {
         overlay::CloseOverlay();
-        return; 
+        return;
     }
 
     ImGuiIO& io = ImGui::GetIO();
@@ -167,16 +163,17 @@ VOID overlay::Render()
     io.MousePos.x = static_cast<float>(p.x);
     io.MousePos.y = static_cast<float>(p.y);
 
-    if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) 
-    {
+    if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
         io.MouseDown[0] = true;
-        io.MouseClicked[0] = true;
-        io.MouseClickedPos[0].x = io.MousePos.x;
-        io.MouseClickedPos[0].y = io.MousePos.y;
+        if (!io.MouseDown[0]) { 
+            io.MouseClicked[0] = true;
+            io.MouseClickedPos[0].x = io.MousePos.x;
+            io.MouseClickedPos[0].y = io.MousePos.y;
+        }
     }
-    else
-    {
+    else {
         io.MouseDown[0] = false;
+        io.MouseClicked[0] = false; 
     }
 
     overlay::g_SwapChainOccluded = false;
@@ -188,13 +185,12 @@ VOID overlay::Render()
 
 VOID overlay::EndRender()
 {
-    const ImVec4 clear_color = ImVec4(0.f, 0.f, 0.f, 0.f);
-    const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
     ImGui::Render();
-    overlay::g_pd3dDeviceContext->OMSetRenderTargets(1, &overlay::g_mainRenderTargetView, nullptr);
-    overlay::g_pd3dDeviceContext->ClearRenderTargetView(overlay::g_mainRenderTargetView, clear_color_with_alpha);
+    ImVec4 clear_color = ImVec4(0.f, 0.f, 0.f, 0.f);
+    const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
+    g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-    HRESULT hr = g_pSwapChain->Present(overlay::vsync, 0x00000100UL);
-    overlay::g_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
+    g_pSwapChain->Present(1, 0);
 }

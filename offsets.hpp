@@ -2362,8 +2362,7 @@ namespace cs2_dumper {
             namespace C_BaseFire {
                 CS2_OFFSET m_flScale = 0x568; // float32
                 CS2_OFFSET m_flStartScale = 0x56C; // float32
-                CS2_OFFSET m_flScaleTime = 0x570; // float32
-                CS2_OFFSET m_nFlags = 0x574; // uint32
+                CS2_OFFSET m_flScaleTime = 0x570; // float32 
             }
             // Parent: C_BaseEntity
             // Field count: 16

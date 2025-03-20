@@ -2,7 +2,6 @@
 #define SDK_HPP
 #include "include.hpp"
 
-
 inline class C_IGlobalVars
 {
 public:
@@ -37,20 +36,9 @@ public:
     void csgo_force_cache();
 }csgo;
 
-
-// CCSPlayer_ItemServices
-class C_BasePlayerPawn
-{
-public:
-    uintptr_t Address = 0;
-
-    bool Update()
-    {
-
-
-        return true;
-    }
-};
+constexpr std::uint32_t MAX_ENTITIES_IN_LIST = 512;
+constexpr std::uint32_t MAX_ENTITY_LISTS = 64;
+constexpr std::uint32_t MAX_TOTAL_ENTITIES = MAX_ENTITIES_IN_LIST * MAX_ENTITY_LISTS;
 
 class C_CEntityIdentity {
 public:
@@ -106,6 +94,7 @@ static C_CEntityInstance GetEntity(int nIdx) noexcept {
     entity.Address = memory->Read<uintptr_t>(uListEntry + 120LL * (nIdx & 0x1FF));
     return entity;
 }
+
 static uintptr_t GetEntityAddress(uintptr_t address) noexcept {
     uintptr_t uListEntry = memory->Read<uintptr_t>(vars::cs2_entitylist + 0x8 * ((address & 0x7FFF) >> 9) + 16);
     if (!uListEntry)
@@ -114,17 +103,47 @@ static uintptr_t GetEntityAddress(uintptr_t address) noexcept {
     return memory->Read<uintptr_t>(uListEntry + 120LL * (address & 0x1FF));
 }
 
-constexpr std::uint32_t MAX_ENTITIES_IN_LIST = 512;
-constexpr std::uint32_t MAX_ENTITY_LISTS = 64;
-constexpr std::uint32_t MAX_TOTAL_ENTITIES = MAX_ENTITIES_IN_LIST * MAX_ENTITY_LISTS;
+class C_BaseEntity : public C_CEntityInstance
+{
+public:
+    uintptr_t Address;
+    uintptr_t CGameSceneNode;
+
+    int m_iHealth;
+    int m_lifeState;
+    bool m_bTakesDamage;
+    float m_flSpeed;
+    int m_iTeamNum;
+    int m_spawnflags;
+    int m_fFlags;
+    Vector_t m_vecAbsVelocity;
+
+    bool Update()
+    {
+        if (!Address)
+            return false;
+
+         this->CGameSceneNode = memory->Read<uintptr_t>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_pGameSceneNode);
+         if (!this->CGameSceneNode)
+             return false;
+
+         this->m_iHealth = memory->Read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_iHealth);
+         this->m_lifeState = memory->Read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_lifeState);
+         this->m_bTakesDamage = memory->Read<bool>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_bTakesDamage);
+         this->m_flSpeed = memory->Read<float>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_flSpeed);
+         this->m_iTeamNum = memory->Read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_iTeamNum);
+         this->m_spawnflags = memory->Read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_spawnflags);
+         this->m_vecAbsVelocity = memory->Read<Vector_t>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_vecAbsVelocity);
+        return true;
+    }
+};
 
 inline class c_entitysystem
 {
 public:
- 
-
-
     std::vector<C_CEntityInstance> CEntityInstances;
+    C_CEntityInstance CLocalPlayer;
+
     std::chrono::steady_clock::time_point LastLoopTime = std::chrono::steady_clock::now();
     int CEntityInstancesCount = 0;
 
@@ -137,7 +156,13 @@ public:
 
             csgo.csgo_update(); // update vars
 
-             CEntityInstances.resize(MAX_TOTAL_ENTITIES + 1);
+            CLocalPlayer.Address = memory->Read<uintptr_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwLocalPlayerPawn);
+            if (!CLocalPlayer.Update())
+            {
+                CLocalPlayer.Address = 0;
+            }
+
+            CEntityInstances.resize(MAX_TOTAL_ENTITIES + 1);
 
             for (int idx = 0; idx < MAX_TOTAL_ENTITIES; idx++) {
                 C_CEntityInstance temp = GetEntity(idx);
@@ -158,6 +183,7 @@ public:
     }
 
 }entitysystem;
+
 
 #endif
 
