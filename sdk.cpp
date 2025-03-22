@@ -1,11 +1,11 @@
-#include "sdk.hpp"
+#include "sdk.h"
 
 std::uintptr_t c_csgo::csgo_entitylist()
 {
     if (!vars::cs2_entitylist || !vars::module_client)
     {
         this->csgo_client();
-        return vars::cs2_entitylist = memory->Read<uintptr_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwEntityList);
+        return vars::cs2_entitylist = memory.Read<uintptr_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwEntityList);
     }
 
     return vars::cs2_entitylist;
@@ -13,20 +13,20 @@ std::uintptr_t c_csgo::csgo_entitylist()
 
 std::uintptr_t c_csgo::csgo_client()
 {
-    vars::module_client = memory->GetModuleAddress(L"client.dll");
+    vars::module_client = memory.GetModuleAddress(L"client.dll");
     return vars::module_client;
 }
 
 std::uintptr_t c_csgo::csgo_engine2()
 {
-    vars::module_engine2 = memory->GetModuleAddress(L"engine2.dll");
+    vars::module_engine2 = memory.GetModuleAddress(L"engine2.dll");
     return vars::module_engine2;
 }
 
 int c_csgo::csgo_buildnumber()
 {
     if (!vars::module_engine2) this->csgo_engine2();
-    vars::cs2_buildnumber = memory->Read<int>(vars::module_engine2 + cs2_dumper::offsets::engine2_dll::dwBuildNumber);
+    vars::cs2_buildnumber = memory.Read<int>(vars::module_engine2 + cs2_dumper::offsets::engine2_dll::dwBuildNumber);
     return vars::cs2_buildnumber;
 }
 
@@ -34,21 +34,20 @@ cs_window c_csgo::csgo_window()
 {
     if (!vars::module_engine2) this->csgo_engine2();
   
-    vars::cs2_window.windowwidth = memory->Read<int>(vars::module_engine2 + cs2_dumper::offsets::engine2_dll::dwWindowWidth);
-    vars::cs2_window.windowheight = memory->Read<int>(vars::module_engine2 + cs2_dumper::offsets::engine2_dll::dwWindowHeight);
+    vars::cs2_window.windowwidth = memory.Read<int>(vars::module_engine2 + cs2_dumper::offsets::engine2_dll::dwWindowWidth);
+    vars::cs2_window.windowheight = memory.Read<int>(vars::module_engine2 + cs2_dumper::offsets::engine2_dll::dwWindowHeight);
      
     return vars::cs2_window;
 }
 
-
 void c_csgo::updateIGlobalVars()
 {
-    memory->ReadRaw(memory->Read<uintptr_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwGlobalVars), &IGlobalVars, sizeof(C_IGlobalVars));
+    memory.ReadRaw(memory.Read<uintptr_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwGlobalVars), &IGlobalVars, sizeof(C_IGlobalVars));
 }
 
 int c_csgo::csgo_highestentity()
 {
-    return memory->Read<int>(vars::cs2_entitylist + cs2_dumper::offsets::client_dll::dwGameEntitySystem_highestEntityIndex);
+    return memory.Read<int>(vars::cs2_entitylist + cs2_dumper::offsets::client_dll::dwGameEntitySystem_highestEntityIndex);
 }
 
 bool c_csgo::csgo_update()
@@ -79,7 +78,6 @@ bool c_csgo::csgo_update()
     this->csgo_window();
     this->csgo_highestentity();
     this->updateIGlobalVars();
-
 
     return true;
 }

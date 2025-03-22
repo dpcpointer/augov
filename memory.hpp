@@ -4,6 +4,7 @@
 #include <TlHelp32.h>
 #include <vector>
 #include <memory>
+#include <string>
 
 class Memory
 {
@@ -15,26 +16,22 @@ public:
     {
         ::PROCESSENTRY32 entry = { };
         entry.dwSize = sizeof(::PROCESSENTRY32);
-
         const HANDLE snapShot = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
         if (snapShot == INVALID_HANDLE_VALUE)
             return false;
-
         bool found = false;
         while (::Process32Next(snapShot, &entry))
         {
-            if (!_wcsicmp(processName, entry.szExeFile)) 
+            if (!_wcsicmp(processName, entry.szExeFile))
             {
                 processId = entry.th32ProcessID;
-                processHandle = ::OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, FALSE, processId);
+                processHandle = ::OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
                 found = (processHandle != nullptr);
                 break;
             }
         }
-
         if (snapShot)
             ::CloseHandle(snapShot);
-
         return found;
     }
 
@@ -52,25 +49,20 @@ public:
     {
         ::MODULEENTRY32 entry = { };
         entry.dwSize = sizeof(::MODULEENTRY32);
-
         const HANDLE snapShot = ::CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processId);
         if (snapShot == INVALID_HANDLE_VALUE)
             return 0;
-
         std::uintptr_t result = 0;
-
         while (::Module32Next(snapShot, &entry))
         {
-            if (!_wcsicmp(moduleName, entry.szModule)) 
+            if (!_wcsicmp(moduleName, entry.szModule))
             {
                 result = reinterpret_cast<std::uintptr_t>(entry.modBaseAddr);
                 break;
             }
         }
-
         if (snapShot)
             ::CloseHandle(snapShot);
-
         return result;
     }
 
@@ -82,17 +74,24 @@ public:
         return value;
     }
 
-    bool ReadRaw(const std::uintptr_t address, void* buffer, std::size_t size) const noexcept
+    bool ReadRaw(const std::uintptr_t address, const void* buffer, size_t size) const noexcept
     {
         SIZE_T bytesRead = 0;
-        return ::ReadProcessMemory(processHandle, reinterpret_cast<const void*>(address), buffer, size, &bytesRead);
+        return ::ReadProcessMemory(processHandle, reinterpret_cast<const void*>(address), (LPVOID)buffer, size, &bytesRead);
     }
 
-   //template <typename T>
-   //void Write(const std::uintptr_t address, const T& value) const noexcept
-   //{
-   //    ::WriteProcessMemory(processHandle, reinterpret_cast<void*>(address), &value, sizeof(T), NULL);
-   //}
+    template <typename T>
+    bool Write(const std::uintptr_t address, const T& value) const noexcept
+    {
+        SIZE_T bytesWritten = 0;
+        return ::WriteProcessMemory(processHandle, reinterpret_cast<void*>(address), &value, sizeof(T), &bytesWritten);
+    }
+
+    bool WriteRaw(const std::uintptr_t address, const void* buffer, size_t size) const noexcept
+    {
+        SIZE_T bytesWritten = 0;
+        return ::WriteProcessMemory(processHandle, reinterpret_cast<void*>(address), buffer, size, &bytesWritten);
+    }
 };
 
-inline std::unique_ptr<Memory> memory = std::make_unique<Memory>();
+inline Memory memory;

@@ -139,16 +139,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="config.cpp" />
+    <ClCompile Include="esp.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Overlay.cpp" />
     <ClCompile Include="sdk.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
+    <ClInclude Include="esp.h" />
     <ClInclude Include="font.hpp" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -161,9 +166,9 @@
     <ClInclude Include="include.hpp" />
     <ClInclude Include="memory.hpp" />
     <ClInclude Include="offsets.hpp" />
-    <ClInclude Include="sdk.hpp" />
-    <ClInclude Include="SimpleOV.hpp" />
-    <ClInclude Include="vars.hpp" />
+    <ClInclude Include="sdk.h" />
+    <ClInclude Include="Overlay.h" />
+    <ClInclude Include="vars.h" />
     <ClInclude Include="Vector.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

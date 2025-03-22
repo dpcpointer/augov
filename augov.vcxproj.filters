@@ -42,6 +42,15 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="esp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="memory.hpp">
@@ -50,10 +59,10 @@
     <ClInclude Include="include.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vars.hpp">
+    <ClInclude Include="vars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk.hpp">
+    <ClInclude Include="sdk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="offsets.hpp">
@@ -62,7 +71,7 @@
     <ClInclude Include="Vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleOV.hpp">
+    <ClInclude Include="Overlay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_truetype.h">
@@ -90,6 +99,12 @@
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="font.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="esp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

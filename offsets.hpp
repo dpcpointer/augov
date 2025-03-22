@@ -9,23 +9,23 @@ namespace cs2_dumper {
     namespace offsets {
         // Module: client.dll
         namespace client_dll {
-            CS2_OFFSET dwCSGOInput = 0x1AAD6D0;
-            CS2_OFFSET dwEntityList = 0x1A37A30;
-            CS2_OFFSET dwGameEntitySystem = 0x1B5E798;
-            CS2_OFFSET dwGameEntitySystem_highestEntityIndex = 0x20F0;
-            CS2_OFFSET dwGameRules = 0x1A9E850;
-            CS2_OFFSET dwGlobalVars = 0x187FC90;
-            CS2_OFFSET dwGlowManager = 0x1A9E870;
-            CS2_OFFSET dwLocalPlayerController = 0x1A890C0;
-            CS2_OFFSET dwLocalPlayerPawn = 0x188BF30;
-            CS2_OFFSET dwPlantedC4 = 0x1AA8A10;
-            CS2_OFFSET dwPrediction = 0x188BDB0;
-            CS2_OFFSET dwSensitivity = 0x1A9FE48;
-            CS2_OFFSET dwSensitivity_sensitivity = 0x40;
-            CS2_OFFSET dwViewAngles = 0x1AADAA0;
-            CS2_OFFSET dwViewMatrix = 0x1AA3810;
-            CS2_OFFSET dwViewRender = 0x1AA4020;
-            CS2_OFFSET dwWeaponC4 = 0x1A3BCB0;
+           CS2_OFFSET dwCSGOInput = 0x1AAE4B0;
+           CS2_OFFSET dwEntityList = 0x1A38800;
+           CS2_OFFSET dwGameEntitySystem = 0x1B5F568;
+           CS2_OFFSET dwGameEntitySystem_highestEntityIndex = 0x20F0;
+           CS2_OFFSET dwGameRules = 0x1A9F630;
+           CS2_OFFSET dwGlobalVars = 0x1880CD0;
+           CS2_OFFSET dwGlowManager = 0x1A9F650;
+           CS2_OFFSET dwLocalPlayerController = 0x1A89E90;
+           CS2_OFFSET dwLocalPlayerPawn = 0x188CF70;
+           CS2_OFFSET dwPlantedC4 = 0x1AA97F0;
+           CS2_OFFSET dwPrediction = 0x188CDF0;
+           CS2_OFFSET dwSensitivity = 0x1AA0C28;
+           CS2_OFFSET dwSensitivity_sensitivity = 0x40;
+           CS2_OFFSET dwViewAngles = 0x1AAE880;
+           CS2_OFFSET dwViewMatrix = 0x1AA45F0;
+           CS2_OFFSET dwViewRender = 0x1AA4E00;
+           CS2_OFFSET dwWeaponC4 = 0x1A3CD60;
         }
         // Module: engine2.dll
         namespace engine2_dll {
@@ -38,8 +38,8 @@ namespace cs2_dumper {
             CS2_OFFSET dwNetworkGameClient_maxClients = 0x238;
             CS2_OFFSET dwNetworkGameClient_serverTickCount = 0x36C;
             CS2_OFFSET dwNetworkGameClient_signOnState = 0x228;
-            CS2_OFFSET dwWindowHeight = 0x62351C;
-            CS2_OFFSET dwWindowWidth = 0x623518;
+            CS2_OFFSET dwWindowHeight = 0x6234FC;
+            CS2_OFFSET dwWindowWidth = 0x6234F8;
         }
         // Module: inputsystem.dll
         namespace inputsystem_dll {
@@ -56,6 +56,7 @@ namespace cs2_dumper {
             CS2_OFFSET dwSoundSystem_engineViewData = 0x7C;
         }
     }
+    
 
     namespace schemas {
         // Module: client.dll
@@ -6964,4 +6965,4 @@ namespace cs2_dumper {
             }
         }
     }
-}
+    }
