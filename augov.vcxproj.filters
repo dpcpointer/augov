@@ -16,96 +16,331 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{4c7618e1-3c9e-466f-8c5c-6b2817e92ff8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGui\freetype">
+      <UniqueIdentifier>{c4c6557e-3b13-4289-a727-0160b61e4832}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sdk.cpp">
+    <ClCompile Include="src\game\sdk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libarys\ImGui\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="libarys\ImGui\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="libarys\ImGui\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="libarys\ImGui\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="libarys\ImGui\imgui_tables.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="libarys\ImGui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\features\esp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\features\config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\features\aimbot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libarys\ImGui\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="libarys\ImGui\imgui_freetype.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\overlay\overlay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="esp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="config.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Overlay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="memory.hpp">
+    <ClInclude Include="libarys\memory\memory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include.hpp">
+    <ClInclude Include="src\include.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vars.h">
+    <ClInclude Include="src\game\vars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk.h">
+    <ClInclude Include="src\game\sdk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="offsets.hpp">
+    <ClInclude Include="src\game\offsets.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vector.hpp">
+    <ClInclude Include="src\game\Vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Overlay.h">
+    <ClInclude Include="libarys\ImGui\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\overlay\font.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\features\esp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\features\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\freetype.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\ft2build.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftadvanc.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftbbox.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftbdf.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftbitmap.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftbzip2.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftcache.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftchapters.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftcid.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftcolor.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftconfig.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftdriver.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\fterrdef.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\fterrors.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftfntfmt.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftgasp.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftglyph.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftgxval.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftgzip.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftheader.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftimage.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftincrem.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftlcdfil.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftlist.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftlogging.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftlzw.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftmac.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftmm.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftmodapi.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftmoderr.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftmodule.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftoption.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftotval.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftoutln.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftparams.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftpfr.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftrender.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftsizes.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftsnames.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftstdlib.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftstroke.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftsynth.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftsystem.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\fttrigon.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\fttypes.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftwinfnt.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\imgui_freetype.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\tttags.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\t1tables.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ttnameid.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\tttables.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\public-macros.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\otsvg.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\mac-support.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\integer-types.h">
+      <Filter>ImGui\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="src\features\aimbot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libarys\banding\banding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\overlay\overlay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_truetype.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imconfig.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_dx11.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_textedit.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="font.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="esp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
   </ItemGroup>
 </Project>

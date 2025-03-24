@@ -2,15 +2,7 @@
 #ifndef SIMPLEOV_HPP
 #define SIMPLEOV_HPP
 
-#include <Windows.h>
-#include <dwmapi.h>
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_win32.h"
-#include "ImGui/imgui_impl_dx11.h"
-#include "ImGui/imgui_internal.h"
-#include <d3d11.h>
-#include <thread>
-#include <chrono>
+#include "../include.hpp"
 
 extern "C" {
     extern __declspec(dllexport) DWORD NvOptimusEnablement;

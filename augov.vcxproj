@@ -72,9 +72,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>augov</TargetName>
+    <IncludePath>D:\repo\augov\libarys\ImGui\freetype\include;$(ProjectDir)ImGui\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\repo\augov\libarys\ImGui\freetype\objs\x64;$(ProjectDir)ImGui\freetype\objs\x64\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\build</OutDir>
+    <IntDir>$(ShortProjectName)\objects</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>augov</TargetName>
+    <IncludePath>D:\repo\augov\libarys\ImGui\freetype\include;$(ProjectDir)ImGui\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\repo\augov\libarys\ImGui\freetype\objs\x64;$(ProjectDir)ImGui\freetype\objs\x64\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\build</OutDir>
+    <IntDir>$(ShortProjectName)\objects</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,7 +124,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,26 +143,33 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="config.cpp" />
-    <ClCompile Include="esp.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Overlay.cpp" />
-    <ClCompile Include="sdk.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="src\features\aimbot.cpp" />
+    <ClCompile Include="src\features\config.cpp" />
+    <ClCompile Include="src\features\esp.cpp" />
+    <ClCompile Include="libarys\ImGui\imgui.cpp" />
+    <ClCompile Include="libarys\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="libarys\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="libarys\ImGui\imgui_freetype.cpp" />
+    <ClCompile Include="libarys\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="libarys\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="libarys\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="libarys\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="src\game\sdk.cpp" />
+    <ClCompile Include="src\overlay\overlay.cpp" />
+    <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="config.h" />
-    <ClInclude Include="esp.h" />
-    <ClInclude Include="font.hpp" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -163,13 +178,86 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="include.hpp" />
-    <ClInclude Include="memory.hpp" />
-    <ClInclude Include="offsets.hpp" />
-    <ClInclude Include="sdk.h" />
-    <ClInclude Include="Overlay.h" />
-    <ClInclude Include="vars.h" />
-    <ClInclude Include="Vector.hpp" />
+    <ClInclude Include="libarys\banding\banding.h" />
+    <ClInclude Include="src\features\aimbot.h" />
+    <ClInclude Include="src\features\config.h" />
+    <ClInclude Include="src\features\esp.h" />
+    <ClInclude Include="src\overlay\font.hpp" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftconfig.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftheader.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftmodule.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftoption.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftstdlib.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\integer-types.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\mac-support.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\public-macros.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\freetype.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftadvanc.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftbbox.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftbdf.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftbitmap.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftbzip2.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftcache.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftchapters.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftcid.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftcolor.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftdriver.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\fterrdef.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\fterrors.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftfntfmt.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftgasp.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftglyph.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftgxval.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftgzip.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftimage.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftincrem.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftlcdfil.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftlist.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftlogging.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftlzw.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftmac.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftmm.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftmodapi.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftmoderr.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftotval.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftoutln.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftparams.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftpfr.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftrender.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftsizes.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftsnames.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftstroke.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftsynth.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftsystem.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\fttrigon.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\fttypes.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ftwinfnt.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\otsvg.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\t1tables.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\ttnameid.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\tttables.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\freetype\tttags.h" />
+    <ClInclude Include="libarys\ImGui\freetype\include\ft2build.h" />
+    <ClInclude Include="libarys\ImGui\imconfig.h" />
+    <ClInclude Include="libarys\ImGui\imgui.h" />
+    <ClInclude Include="libarys\ImGui\imgui_freetype.h" />
+    <ClInclude Include="libarys\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="libarys\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="libarys\ImGui\imgui_internal.h" />
+    <ClInclude Include="libarys\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="libarys\ImGui\imstb_textedit.h" />
+    <ClInclude Include="libarys\ImGui\imstb_truetype.h" />
+    <ClInclude Include="src\include.hpp" />
+    <ClInclude Include="libarys\memory\memory.hpp" />
+    <ClInclude Include="src\game\offsets.hpp" />
+    <ClInclude Include="src\game\sdk.h" />
+    <ClInclude Include="src\game\vars.h" />
+    <ClInclude Include="src\game\Vector.hpp" />
+    <ClInclude Include="src\overlay\overlay.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
