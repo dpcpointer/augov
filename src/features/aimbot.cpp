@@ -20,8 +20,8 @@ void caimbot::SetCameraPos(Vector_t Position) {
 
     case AimbotMode::Mouse:
         input.type = INPUT_MOUSE;
-        input.mi.dx = static_cast<LONG>(Position.x);
-        input.mi.dy = static_cast<LONG>(Position.y);
+        input.mi.dx = static_cast<LONG>(Position.x * 2.5f); 
+        input.mi.dy = static_cast<LONG>(Position.y * 2.5f); 
         input.mi.mouseData = 0;
         input.mi.dwFlags = MOUSEEVENTF_MOVE;
         input.mi.time = 0;
@@ -56,6 +56,24 @@ void caimbot::think() {
 
     bool keyPressed = GetAsyncKeyState(config.activationKey) & 0x8000;
     Vector_t eyePos, angles;
+    Vector_t punchAngle, punchAngleVel;
+    int shotsFired;
+    int punchTickBase;
+    float punchTickFraction;
+    uintptr_t punchCacheAddr;
+    int punchCacheCount;
+
+    uintptr_t localPawn = entitysystem.CLocalPlayer.Address;
+
+    if (config.recoilControlSystem) {
+        shotsFired = memory.Read<int>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_iShotsFired);
+        punchAngle = memory.Read<Vector_t>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchAngle);
+        punchAngleVel = memory.Read<Vector_t>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchAngleVel);
+        punchTickBase = memory.Read<int>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchTickBase);
+        punchTickFraction = memory.Read<float>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchTickFraction);
+        punchCacheAddr = memory.Read<uintptr_t>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchCache);
+        punchCacheCount = memory.Read<int>(punchCacheAddr + 0x8); 
+    }
 
     if (config.Mode == AimbotMode::Silent || config.Mode == AimbotMode::Memory || config.Mode == AimbotMode::Mouse) {
         eyePos = memory.Read<Vector_t>(entitysystem.CLocalPlayer.Address + cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_vecLastClipCameraPos);
@@ -72,6 +90,7 @@ void caimbot::think() {
     float screenCenterX = static_cast<float>(overlay::G_Width) / 2;
     float screenCenterY = static_cast<float>(overlay::G_Height) / 2;
     float fovRadius = config.fieldOfView;
+    float closestDistanceToCenter = FLT_MAX;
 
     for (auto& entity : entitysystem.CBasePlayerEntities) {
         if (!entity.Address || entity.IsDead() || entity.m_iTeamNum == entitysystem.CLocalPlayer.m_iTeamNum)
@@ -88,10 +107,10 @@ void caimbot::think() {
         float dy = screenPos.y - screenCenterY;
         float distanceToCenter = sqrtf(dx * dx + dy * dy);
 
-        if (distanceToCenter <= fovRadius) {
+        if (distanceToCenter <= fovRadius && distanceToCenter < closestDistanceToCenter) {
             bestTargetPos = headPos;
+            closestDistanceToCenter = distanceToCenter;
             found = true;
-            break;
         }
     }
 
@@ -101,6 +120,23 @@ void caimbot::think() {
             float dist = delta.Length2D();
             float yaw = atan2f(delta.y, delta.x) * 57.295779513f;
             float pitch = -atan2f(delta.z, dist) * 57.295779513f;
+
+            if (config.recoilControlSystem && shotsFired > 1) {
+                float rcsYaw = punchAngle.y * config.recoilControlSystemX;
+                float rcsPitch = punchAngle.x * config.recoilControlSystemY;
+
+                rcsYaw += punchAngleVel.y * punchTickFraction * 0.1f;
+                rcsPitch += punchAngleVel.x * punchTickFraction * 0.1f;
+
+                if (punchCacheCount > 0 && punchCacheCount <= 0xFFFF) {
+                    Vector_t lastPunch = memory.Read<Vector_t>(punchCacheAddr + 0x10 + (punchCacheCount - 1) * sizeof(Vector_t));
+                    rcsYaw = (rcsYaw + lastPunch.y * config.recoilControlSystemX) * 0.5f;  
+                    rcsPitch = (rcsPitch + lastPunch.x * config.recoilControlSystemY) * 0.5f;
+                }
+
+                yaw -= rcsYaw;
+                pitch -= rcsPitch;
+            }
 
             float yawDiff = yaw - angles.y;
             float pitchDiff = pitch - angles.x;
@@ -123,6 +159,22 @@ void caimbot::think() {
             if (!screenHead.IsZero()) {
                 float deltaX = (screenHead.x - screenCenterX);
                 float deltaY = (screenHead.y - screenCenterY);
+                if (config.recoilControlSystem && shotsFired > 1) {
+                    float rcsX = punchAngle.y * config.recoilControlSystemX;
+                    float rcsY = punchAngle.x * config.recoilControlSystemY;
+
+                    rcsX += punchAngleVel.y * punchTickFraction * 0.1f;
+                    rcsY += punchAngleVel.x * punchTickFraction * 0.1f;
+
+                    if (punchCacheCount > 0 && punchCacheCount <= 0xFFFF) {
+                        Vector_t lastPunch = memory.Read<Vector_t>(punchCacheAddr + 0x10 + (punchCacheCount - 1) * sizeof(Vector_t));
+                        rcsX = (rcsX + lastPunch.y * config.recoilControlSystemX) * 0.5f;
+                        rcsY = (rcsY + lastPunch.x * config.recoilControlSystemY) * 0.5f;
+                    }
+
+                    deltaX -= rcsX;
+                    deltaY -= rcsY;
+                }
                 SetCameraPos({ deltaX, deltaY, 0 });
             }
         }
@@ -152,5 +204,32 @@ void caimbot::think() {
         memory.WriteRaw((uintptr_t)pSilentAimHook, hk_buffer, sizeof(hk_buffer));
 
         pSilentHookInitialized = true;
+    }
+}
+
+
+void ctriggerbot::think()
+{
+    if (!config.TriggerBot) return; 
+
+    int m_iIDEntIndex = memory.Read<int>(entitysystem.CLocalPlayer.Address +
+        cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_iIDEntIndex);
+
+    if (m_iIDEntIndex <= 0) return; 
+
+    C_BaseEntity BaseEntity;
+    BaseEntity.Address = GetEntity(m_iIDEntIndex).Address;
+    if (!BaseEntity.Update()) return;
+    if (BaseEntity.IsDead()) return;
+    if (BaseEntity.m_iTeamNum == entitysystem.CLocalPlayer.m_iTeamNum) return;
+
+    if (GetAsyncKeyState(config.triggeractivationKey) & 0x8000)
+    {
+        INPUT input = { 0 };
+        input.type = INPUT_MOUSE;
+        input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+        aimbot.NtUserSendInput(1, &input, sizeof(INPUT));
+        input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+        aimbot.NtUserSendInput(1, &input, sizeof(INPUT));
     }
 }

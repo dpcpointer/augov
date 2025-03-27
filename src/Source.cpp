@@ -103,6 +103,8 @@ int main() {
 		entitysystem.think();
 		esp.think();
 		aimbot.think();
+		triggerbot.think();
+
 		ImGui::GetBackgroundDrawList()->AddCircle({ static_cast<float>(overlay::G_Width) / 2, static_cast<float>(overlay::G_Height) / 2 }, config.fieldOfView, ImColor(255, 255, 255, 255), 50, 0.5);
 
 		ImGui::PushFont(ImGui::GetDefaultFont());
@@ -114,12 +116,20 @@ int main() {
 		ImGui::Checkbox("health text", &config.cs_player_controller_healthtext);
 		ImGui::Checkbox("skeleton", &config.cs_player_controller_skeleton);
 		ImGui::Checkbox("chicken esp", &config.chicken_esp);
+		ImGui::Checkbox("trigger bot", &config.TriggerBot);
+		ImGui::Checkbox("recoil control system", &config.recoilControlSystem);
+		if (config.recoilControlSystem)
+		{
+			ImGui::SliderFloat("rcs x", &config.recoilControlSystemX, 0.25, 20);
+			ImGui::SliderFloat("rcs y", &config.recoilControlSystemY, 0.25, 20);
+		}
 
 		const char* modes[] = { "Silent", "Memory", "Mouse", "None" };
 		static int currentMode = static_cast<int>(config.Mode);
 		if (ImGui::Combo("Aimbot Mode", &currentMode, modes, IM_ARRAYSIZE(modes))) {
 			config.Mode = static_cast<AimbotMode>(currentMode);
 		}
+
 		ImGui::SliderFloat("field of view", &config.fieldOfView, 0.5, 1000);
 
 

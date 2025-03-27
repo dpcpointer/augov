@@ -50,4 +50,11 @@ public:
 	void think();
 }aimbot;
 
+
+inline class ctriggerbot
+{
+public:
+    void think();
+}triggerbot;
+
 #endif AIMBOT_H

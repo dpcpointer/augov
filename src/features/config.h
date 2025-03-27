@@ -24,13 +24,16 @@ public:
 
 	bool aimbot = true;
 
-
-
 	AimbotMode Mode = AimbotMode::None;
 	float fieldOfView = 90.0f;
 	float smoothness = 1.0f;
-	bool recoilControl = false;
 	int activationKey = 0x06;
+	bool recoilControlSystem;
+	float recoilControlSystemX;
+	float recoilControlSystemY;
+
+	int triggeractivationKey = 0x06;
+	bool TriggerBot;
 
 
 
