@@ -103,6 +103,7 @@ int main() {
 		entitysystem.think();
 		esp.think();
 		aimbot.think();
+		ImGui::GetBackgroundDrawList()->AddCircle({ static_cast<float>(overlay::G_Width) / 2, static_cast<float>(overlay::G_Height) / 2 }, config.fieldOfView, ImColor(255, 255, 255, 255), 50, 0.5);
 
 		ImGui::PushFont(ImGui::GetDefaultFont());
 
@@ -119,6 +120,7 @@ int main() {
 		if (ImGui::Combo("Aimbot Mode", &currentMode, modes, IM_ARRAYSIZE(modes))) {
 			config.Mode = static_cast<AimbotMode>(currentMode);
 		}
+		ImGui::SliderFloat("field of view", &config.fieldOfView, 0.5, 1000);
 
 
 

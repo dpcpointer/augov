@@ -5,6 +5,14 @@
 #include "config.h"
 #include "../overlay/overlay.h"
 
+using namespace std::chrono_literals;
+
+typedef ULONG(NTAPI* NtUserSendInput_t)(
+    _In_ ULONG cInputs,
+    _In_ LPINPUT pInputs,
+    _In_ LONG cbSize
+);
+
 inline BYTE hk_jmp[] = {
     0x48, 0xB8, // mov rax, imm64
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 64-bit address
@@ -29,6 +37,7 @@ CS2_OFFSET SILENT_RETURN = 0x8D1D03;
 inline class caimbot
 {
 public:
+    NtUserSendInput_t NtUserSendInput;
     float SilentAimValues[4] = { 0.f, 0.f, 0.f, 0.f };
 	LPVOID pSilentAimValues;
 	LPVOID pSilentAimHook;
