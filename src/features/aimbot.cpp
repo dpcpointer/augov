@@ -7,17 +7,6 @@ Vector_t caimbot::GetViewAngels() {
 void caimbot::SetCameraPos(Vector_t Position) {
     INPUT input = {};
     switch (config.Mode) {
-    case AimbotMode::Silent:
-        if (!pSilentHookInitialized) return;
-        SilentAimValues[0] = Position.x;
-        SilentAimValues[1] = Position.y;
-        memory.WriteRaw((uintptr_t)pSilentAimValues, SilentAimValues, sizeof(SilentAimValues));
-        break;
-
-    case AimbotMode::Memory:
-        memory.Write<Vector2D_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwViewAngles, Position.ToVector2D());
-        break;
-
     case AimbotMode::Mouse:
         input.type = INPUT_MOUSE;
         input.mi.dx = static_cast<LONG>(Position.x * 2.5f); 
@@ -27,34 +16,22 @@ void caimbot::SetCameraPos(Vector_t Position) {
         input.mi.time = 0;
         input.mi.dwExtraInfo = 0;
         NtUserSendInput(1, &input, sizeof(INPUT));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         break;
 
     case AimbotMode::None:
         break;
+
+    default: break;
     }
 }
 
-void caimbot::CleanupSilentHook() {
-    if (pSilentHookInitialized) {
-        memory.WriteRaw(vars::module_client + SILENT_OG, hk_orig, sizeof(hk_orig));
-        if (pSilentAimHook) VirtualFreeEx(memory.processHandle, pSilentAimHook, 0, MEM_RELEASE);
-        if (pSilentAimValues) VirtualFreeEx(memory.processHandle, pSilentAimValues, 0, MEM_RELEASE);
-        pSilentAimHook = nullptr;
-        pSilentAimValues = nullptr;
-        pSilentHookInitialized = false;
-    }
-}
 
 void caimbot::think() {
     if (!NtUserSendInput) {
         NtUserSendInput = (NtUserSendInput_t)GetProcAddress(GetModuleHandleA("win32u"), "NtUserSendInput");
     }
-    if (config.Mode == AimbotMode::None) {
-        CleanupSilentHook();
-        return;
-    }
-
-    bool keyPressed = GetAsyncKeyState(config.activationKey) & 0x8000;
+    bool keyPressed = GetAsyncKeyState((int)config.activationKey) & 0x8000;
     Vector_t eyePos, angles;
     Vector_t punchAngle, punchAngleVel;
     int shotsFired;
@@ -75,14 +52,6 @@ void caimbot::think() {
         punchCacheCount = memory.Read<int>(punchCacheAddr + 0x8); 
     }
 
-    if (config.Mode == AimbotMode::Silent || config.Mode == AimbotMode::Memory || config.Mode == AimbotMode::Mouse) {
-        eyePos = memory.Read<Vector_t>(entitysystem.CLocalPlayer.Address + cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_vecLastClipCameraPos);
-        angles = GetViewAngels();
-    }
-
-    if (config.Mode != AimbotMode::Silent && pSilentHookInitialized) {
-        CleanupSilentHook();
-    }
 
     Vector_t bestTargetPos;
     bool found = false;
@@ -115,46 +84,7 @@ void caimbot::think() {
     }
 
     if (found && keyPressed) {
-        if (config.Mode == AimbotMode::Silent || config.Mode == AimbotMode::Memory) {
-            Vector_t delta = bestTargetPos - eyePos;
-            float dist = delta.Length2D();
-            float yaw = atan2f(delta.y, delta.x) * 57.295779513f;
-            float pitch = -atan2f(delta.z, dist) * 57.295779513f;
-
-            if (config.recoilControlSystem && shotsFired > 1) {
-                float rcsYaw = punchAngle.y * config.recoilControlSystemX;
-                float rcsPitch = punchAngle.x * config.recoilControlSystemY;
-
-                rcsYaw += punchAngleVel.y * punchTickFraction * 0.1f;
-                rcsPitch += punchAngleVel.x * punchTickFraction * 0.1f;
-
-                if (punchCacheCount > 0 && punchCacheCount <= 0xFFFF) {
-                    Vector_t lastPunch = memory.Read<Vector_t>(punchCacheAddr + 0x10 + (punchCacheCount - 1) * sizeof(Vector_t));
-                    rcsYaw = (rcsYaw + lastPunch.y * config.recoilControlSystemX) * 0.5f;  
-                    rcsPitch = (rcsPitch + lastPunch.x * config.recoilControlSystemY) * 0.5f;
-                }
-
-                yaw -= rcsYaw;
-                pitch -= rcsPitch;
-            }
-
-            float yawDiff = yaw - angles.y;
-            float pitchDiff = pitch - angles.x;
-
-            while (yawDiff > 180.0f) yawDiff -= 360.0f;
-            while (yawDiff < -180.0f) yawDiff += 360.0f;
-            while (pitchDiff > 180.0f) pitchDiff -= 360.0f;
-            while (pitchDiff < -180.0f) pitchDiff += 360.0f;
-
-            float newYaw = angles.y + yawDiff;
-            float newPitch = angles.x + pitchDiff;
-
-            if (newPitch > 89.0f) newPitch = 89.0f;
-            if (newPitch < -89.0f) newPitch = -89.0f;
-
-            SetCameraPos({ newPitch, newYaw, 0.0f });
-        }
-        else if (config.Mode == AimbotMode::Mouse) {
+         if (config.Mode == AimbotMode::Mouse) {
             Vector2D_t screenHead = world_to_screen(bestTargetPos).ToVector2D();
             if (!screenHead.IsZero()) {
                 float deltaX = (screenHead.x - screenCenterX);
@@ -178,32 +108,6 @@ void caimbot::think() {
                 SetCameraPos({ deltaX, deltaY, 0 });
             }
         }
-    }
-    else if (config.Mode == AimbotMode::Silent) {
-        SetCameraPos(GetViewAngels());
-    }
-
-    if (config.Mode == AimbotMode::Silent && !pSilentHookInitialized) {
-        pSilentAimHook = VirtualAllocEx(memory.processHandle, NULL, 64, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-        pSilentAimValues = VirtualAllocEx(memory.processHandle, NULL, 32, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-
-        if (!pSilentAimHook || !pSilentAimValues) {
-            return;
-        }
-
-        BYTE jmp_buffer[sizeof(hk_jmp)];
-        memcpy(jmp_buffer, hk_jmp, sizeof(hk_jmp));
-        memcpy(jmp_buffer + 2, &pSilentAimHook, sizeof(uintptr_t));
-        memory.WriteRaw(vars::module_client + SILENT_JMP, jmp_buffer, sizeof(jmp_buffer));
-
-        BYTE hk_buffer[sizeof(hk)];
-        memcpy(hk_buffer, hk, sizeof(hk));
-        memcpy(hk_buffer + 2, &pSilentAimValues, sizeof(uintptr_t));
-        LPVOID returnAddr = (LPVOID)(vars::module_client + SILENT_RETURN);
-        memcpy(hk_buffer + 21, &returnAddr, sizeof(uintptr_t));
-        memory.WriteRaw((uintptr_t)pSilentAimHook, hk_buffer, sizeof(hk_buffer));
-
-        pSilentHookInitialized = true;
     }
 }
 

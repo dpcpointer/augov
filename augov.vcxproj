@@ -158,15 +158,18 @@
     <ClCompile Include="libarys\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="libarys\ImGui\imgui_tables.cpp" />
     <ClCompile Include="libarys\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="src\features\misc.cpp" />
     <ClCompile Include="src\game\sdk.cpp" />
     <ClCompile Include="src\overlay\overlay.cpp" />
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libarys\banding\banding.h" />
+    <ClInclude Include="libarys\memory\memory.hpp" />
     <ClInclude Include="src\features\aimbot.h" />
     <ClInclude Include="src\features\config.h" />
     <ClInclude Include="src\features\esp.h" />
+    <ClInclude Include="src\features\misc.h" />
     <ClInclude Include="src\overlay\font.hpp" />
     <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftconfig.h" />
     <ClInclude Include="libarys\ImGui\freetype\include\freetype\config\ftheader.h" />
@@ -233,7 +236,6 @@
     <ClInclude Include="libarys\ImGui\imstb_textedit.h" />
     <ClInclude Include="libarys\ImGui\imstb_truetype.h" />
     <ClInclude Include="src\include.hpp" />
-    <ClInclude Include="libarys\memory\memory.hpp" />
     <ClInclude Include="src\game\offsets.hpp" />
     <ClInclude Include="src\game\sdk.h" />
     <ClInclude Include="src\game\vars.h" />

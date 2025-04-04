@@ -2,6 +2,7 @@
 #include "include.hpp"
 #include "features/esp.h"
 #include "features/aimbot.h"
+#include "features/misc.h"
 #include "game/sdk.h"
 #include "features/config.h"
 #include "overlay/font.hpp"
@@ -104,6 +105,7 @@ int main() {
 		esp.think();
 		aimbot.think();
 		triggerbot.think();
+		misc.think();
 
 		ImGui::GetBackgroundDrawList()->AddCircle({ static_cast<float>(overlay::G_Width) / 2, static_cast<float>(overlay::G_Height) / 2 }, config.fieldOfView, ImColor(255, 255, 255, 255), 50, 0.5);
 
@@ -118,28 +120,76 @@ int main() {
 		ImGui::Checkbox("chicken esp", &config.chicken_esp);
 		ImGui::Checkbox("trigger bot", &config.TriggerBot);
 		ImGui::Checkbox("recoil control system", &config.recoilControlSystem);
+		ImGui::Checkbox("spectator esp", &config.spectatoresp);
 		if (config.recoilControlSystem)
 		{
 			ImGui::SliderFloat("rcs x", &config.recoilControlSystemX, 0.25, 20);
 			ImGui::SliderFloat("rcs y", &config.recoilControlSystemY, 0.25, 20);
 		}
 
-		const char* modes[] = { "Silent", "Memory", "Mouse", "None" };
+		const char* modes[] = { "Mouse", "None" };
 		static int currentMode = static_cast<int>(config.Mode);
 		if (ImGui::Combo("Aimbot Mode", &currentMode, modes, IM_ARRAYSIZE(modes))) {
 			config.Mode = static_cast<AimbotMode>(currentMode);
 		}
 
+		static bool waitingForKey = false;
+		if (waitingForKey) {
+			ImGui::Text("Press a key...");
+
+			if (IsKeyPressed(AimbotKey::MOUSE_LEFT)) { config.activationKey = AimbotKey::MOUSE_LEFT; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::MOUSE_RIGHT)) { config.activationKey = AimbotKey::MOUSE_RIGHT; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::MOUSE_X1)) { config.activationKey = AimbotKey::MOUSE_X1; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::MOUSE_X2)) { config.activationKey = AimbotKey::MOUSE_X2; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::SHIFT)) { config.activationKey = AimbotKey::SHIFT; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::CTRL)) { config.activationKey = AimbotKey::CTRL; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::ALT)) { config.activationKey = AimbotKey::ALT; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::SPACE)) { config.activationKey = AimbotKey::SPACE; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::Q)) { config.activationKey = AimbotKey::Q; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::E)) { config.activationKey = AimbotKey::E; waitingForKey = false; }
+			else if (IsKeyPressed(AimbotKey::F)) { config.activationKey = AimbotKey::F; waitingForKey = false; }
+		}
+		else {
+			if (ImGui::Button("Set Key")) {
+				waitingForKey = true;
+			}
+		}
+
+		ImGui::Text("Current Key: %d", static_cast<int>(config.activationKey));
+
 		ImGui::SliderFloat("field of view", &config.fieldOfView, 0.5, 1000);
-
-
 
 		ImGui::End();
 
 		ImGui::PopFont();
 
 
+		if (config.spectatoresp) {
+			ImGui::SetNextWindowPos(ImVec2(10.f, 10.f), ImGuiCond_Always);
 
+			ImGui::Begin("Spectator List", nullptr,
+				ImGuiWindowFlags_NoTitleBar |
+				ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_AlwaysAutoResize |
+				ImGuiWindowFlags_NoMove);
+
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.7f));
+
+			ImGui::Text("Spectators:");
+			ImGui::Separator();
+			if (entitysystem.Spectators.empty()) {
+				ImGui::Text("None");
+			}
+			else {
+				for (const auto& spectator : entitysystem.Spectators) {
+					ImGui::Text("%s", spectator.c_str());
+				}
+			}
+
+			ImGui::PopStyleColor();
+
+			ImGui::End();
+		}
 
 
 
