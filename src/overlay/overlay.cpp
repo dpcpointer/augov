@@ -78,7 +78,7 @@ namespace overlay {
             LoadCursor(nullptr, IDC_ARROW),
             nullptr,
             nullptr,
-            "ovh",
+            "hurtie",
             nullptr
         };
 
@@ -87,7 +87,7 @@ namespace overlay {
 
         RegisterClassExA(&wcex);
 
-        Window = CreateWindowExA(NULL, "ovh", "ovh", WS_POPUP, Rect.left, Rect.top, Rect.right, Rect.bottom, NULL, NULL, wcex.hInstance, NULL);
+        Window = CreateWindowExA(NULL, "hurtie", "hurtie", WS_POPUP, Rect.left, Rect.top, Rect.right, Rect.bottom, NULL, NULL, wcex.hInstance, NULL);
         SetWindowLong(Window, GWL_EXSTYLE, WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW);
         SetLayeredWindowAttributes(Window, RGB(0, 0, 0), 255, NULL);
 

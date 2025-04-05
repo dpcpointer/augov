@@ -33,3 +33,5 @@
 /.vs
 /augov
 /x64
+*.pdb
+/build

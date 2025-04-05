@@ -25,7 +25,7 @@ public:
             if (!_wcsicmp(processName, entry.szExeFile))
             {
                 processId = entry.th32ProcessID;
-                processHandle = ::OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
+                processHandle = ::OpenProcess(PROCESS_VM_READ, FALSE, processId);
                 found = (processHandle != nullptr);
                 break;
             }
