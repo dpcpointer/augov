@@ -158,7 +158,7 @@ int main() {
 		ImGui::Text("Current Key: %d", static_cast<int>(config.activationKey));
 
 		ImGui::SliderFloat("field of view", &config.fieldOfView, 0.5, 1000);
-
+		ImGui::SliderFloat("aimbot speed", &config.aimAmt, 1, 2.3);
 		ImGui::End();
 
 		ImGui::PopFont();

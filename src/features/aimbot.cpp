@@ -9,8 +9,8 @@ void caimbot::SetCameraPos(Vector_t Position) {
     switch (config.Mode) {
     case AimbotMode::Mouse:
         input.type = INPUT_MOUSE;
-        input.mi.dx = static_cast<LONG>(Position.x * 2.5f); 
-        input.mi.dy = static_cast<LONG>(Position.y * 2.5f); 
+        input.mi.dx = static_cast<LONG>(Position.x * config.aimAmt); 
+        input.mi.dy = static_cast<LONG>(Position.y * config.aimAmt);
         input.mi.mouseData = 0;
         input.mi.dwFlags = MOUSEEVENTF_MOVE;
         input.mi.time = 0;

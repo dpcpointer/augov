@@ -53,7 +53,8 @@ public:
 
 	int triggeractivationKey = 0x06;
 	bool TriggerBot;
-
+	
+	float aimAmt;
 	bool bhop = false;
 
 
