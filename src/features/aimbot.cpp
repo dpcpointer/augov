@@ -1,7 +1,7 @@
 #include "aimbot.h"
 
 Vector_t caimbot::GetViewAngels() {
-    return memory.Read<Vector_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwViewAngles);
+    return m.read<Vector_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwViewAngles);
 }
 
 void caimbot::SetCameraPos(Vector_t Position) {
@@ -43,13 +43,13 @@ void caimbot::think() {
     uintptr_t localPawn = entitysystem.CLocalPlayer.Address;
 
     if (config.recoilControlSystem) {
-        shotsFired = memory.Read<int>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_iShotsFired);
-        punchAngle = memory.Read<Vector_t>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchAngle);
-        punchAngleVel = memory.Read<Vector_t>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchAngleVel);
-        punchTickBase = memory.Read<int>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchTickBase);
-        punchTickFraction = memory.Read<float>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchTickFraction);
-        punchCacheAddr = memory.Read<uintptr_t>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchCache);
-        punchCacheCount = memory.Read<int>(punchCacheAddr + 0x8); 
+        shotsFired = m.read<int>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_iShotsFired);
+        punchAngle = m.read<Vector_t>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchAngle);
+        punchAngleVel = m.read<Vector_t>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchAngleVel);
+        punchTickBase = m.read<int>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchTickBase);
+        punchTickFraction = m.read<float>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchTickFraction);
+        punchCacheAddr = m.read<uintptr_t>(localPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchCache);
+        punchCacheCount = m.read<int>(punchCacheAddr + 0x8); 
     }
 
 
@@ -65,8 +65,8 @@ void caimbot::think() {
         if (!entity.Address || entity.IsDead() || entity.m_iTeamNum == entitysystem.CLocalPlayer.m_iTeamNum)
             continue;
 
-        uintptr_t boneArray = memory.Read<uintptr_t>(entity.CGameSceneNode + cs2_dumper::schemas::client_dll::CSkeletonInstance::m_modelState + 0x80);
-        Vector_t headPos = memory.Read<Vector_t>(boneArray + 6 * 32);
+        uintptr_t boneArray = m.read<uintptr_t>(entity.CGameSceneNode + cs2_dumper::schemas::client_dll::CSkeletonInstance::m_modelState + 0x80);
+        Vector_t headPos = m.read<Vector_t>(boneArray + 6 * 32);
 
         Vector2D_t screenPos = world_to_screen(headPos).ToVector2D();
         if (screenPos.IsZero())
@@ -97,7 +97,7 @@ void caimbot::think() {
                     rcsY += punchAngleVel.x * punchTickFraction * 0.1f;
 
                     if (punchCacheCount > 0 && punchCacheCount <= 0xFFFF) {
-                        Vector_t lastPunch = memory.Read<Vector_t>(punchCacheAddr + 0x10 + (punchCacheCount - 1) * sizeof(Vector_t));
+                        Vector_t lastPunch = m.read<Vector_t>(punchCacheAddr + 0x10 + (punchCacheCount - 1) * sizeof(Vector_t));
                         rcsX = (rcsX + lastPunch.y * config.recoilControlSystemX) * 0.5f;
                         rcsY = (rcsY + lastPunch.x * config.recoilControlSystemY) * 0.5f;
                     }
@@ -116,7 +116,7 @@ void ctriggerbot::think()
 {
     if (!config.TriggerBot) return; 
 
-    int m_iIDEntIndex = memory.Read<int>(entitysystem.CLocalPlayer.Address +
+    int m_iIDEntIndex = m.read<int>(entitysystem.CLocalPlayer.Address +
         cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_iIDEntIndex);
 
     if (m_iIDEntIndex <= 0) return; 

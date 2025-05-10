@@ -45,7 +45,7 @@ public:
         }
     }
 
-    std::uintptr_t GetModuleAddress(const wchar_t* moduleName) const noexcept
+    std::uintptr_t GetModuleBase(const wchar_t* moduleName) const noexcept
     {
         ::MODULEENTRY32 entry = { };
         entry.dwSize = sizeof(::MODULEENTRY32);
@@ -67,14 +67,14 @@ public:
     }
 
     template <typename T>
-    T Read(const std::uintptr_t address) const noexcept
+    T read(const std::uintptr_t address) const noexcept
     {
         T value = { };
         ::ReadProcessMemory(processHandle, reinterpret_cast<const void*>(address), &value, sizeof(T), NULL);
         return value;
     }
 
-    bool ReadRaw(const std::uintptr_t address, const void* buffer, size_t size) const noexcept
+    bool read(const std::uintptr_t address, const void* buffer, size_t size) const noexcept
     {
         SIZE_T bytesRead = 0;
         return ::ReadProcessMemory(processHandle, reinterpret_cast<const void*>(address), (LPVOID)buffer, size, &bytesRead);
@@ -94,4 +94,4 @@ public:
     }
 };
 
-inline Memory memory;
+inline Memory m;

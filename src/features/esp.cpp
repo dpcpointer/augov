@@ -198,9 +198,9 @@ void cesp::renderSkeletonEsp(const C_BaseEntity& CBaseEntity) {
 	const int maxBones = 128;
 	BoneJointData boneData[maxBones];
 
-	uintptr_t boneArray = memory.Read<uintptr_t>(CBaseEntity.CGameSceneNode + cs2_dumper::schemas::client_dll::CSkeletonInstance::m_modelState + 0x80);
+	uintptr_t boneArray = m.read<uintptr_t>(CBaseEntity.CGameSceneNode + cs2_dumper::schemas::client_dll::CSkeletonInstance::m_modelState + 0x80);
 	if (!boneArray) return;
-	memory.ReadRaw(boneArray, boneData, sizeof(BoneJointData) * maxBones);
+	m.read(boneArray, boneData, sizeof(BoneJointData) * maxBones);
 
 	struct BoneConnection {
 		int from;
@@ -261,7 +261,7 @@ void cesp::renderSkeletonEsp(const C_BaseEntity& CBaseEntity) {
 
 void cesp::renderBoxEsp(const C_BaseEntity& CBaseEntity)
 {
-	Vector_t basePosition = memory.Read<Vector_t>(CBaseEntity.Address + cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_vOldOrigin);
+	Vector_t basePosition = m.read<Vector_t>(CBaseEntity.Address + cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_vOldOrigin);
 	Vector_t headPosition = { basePosition.x, basePosition.y, basePosition.z + 72.5f };
 
 	Vector_t w2sHead = world_to_screen(headPosition);
@@ -307,7 +307,7 @@ void cesp::renderBoxEsp(const C_BaseEntity& CBaseEntity, const BoxEspParams& box
 }
 
 void cesp::think() {
-	vars::view_matrix = memory.Read<view_matrix_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwViewMatrix);
+	vars::view_matrix = m.read<view_matrix_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwViewMatrix);
 
 	for (auto& BaseEntity : entitysystem.CBasePlayerEntities) {
 		if (!BaseEntity.Update()) continue;

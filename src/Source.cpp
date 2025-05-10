@@ -8,14 +8,14 @@
 #include "overlay/font.hpp"
 
 int main() {
-	if (!memory.Attach(L"cs2.exe")) {
+	if (!m.Attach(L"cs2.exe")) {
 		return -1;
 	}
 
 
 	if (!overlay::SetupOverlay())
 	{
-		memory.Detach();
+		m.Detach();
 		return -1;
 	}
 
@@ -89,13 +89,10 @@ int main() {
 	csgo.csgo_update();
 
 
-
 	printf("[augov] module [client.dll] - %lld\n", vars::module_client);
 	printf("[augov] module [engine2.dll] - %lld\n", vars::module_engine2);
 	printf("[augov] dwEntityList - %lld\n", vars::cs2_entitylist);
 	printf("[augov] game version - %ld\n", vars::cs2_buildnumber);
-	printf("[augov] game pid - %lld\n", memory.processId);
-	printf("[augov] game handle - %p\n", memory.processHandle);
 	printf("[augov] attached \n");
 
 	while (!overlay::ShouldQuit) {
@@ -196,7 +193,7 @@ int main() {
 		overlay::EndRender();
 	}
 
-	memory.Detach();
+	m.Detach();
 	overlay::CloseOverlay();
 	return 0;
 }

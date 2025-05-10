@@ -83,11 +83,11 @@ public:
 	bool get_m_designerName() {
 		if (!Address) return false;
 
-		uintptr_t DesignerNameAddress = memory.Read<uintptr_t>(Address + cs2_dumper::schemas::client_dll::CEntityIdentity::m_designerName);
+		uintptr_t DesignerNameAddress = m.read<uintptr_t>(Address + cs2_dumper::schemas::client_dll::CEntityIdentity::m_designerName);
 		if (!DesignerNameAddress) return false;
 
 		char NameBuffer[MAX_PATH] = {};
-		if (!memory.ReadRaw(DesignerNameAddress, &NameBuffer, sizeof(NameBuffer))) {
+		if (!m.read(DesignerNameAddress, &NameBuffer, sizeof(NameBuffer))) {
 			return false;
 		}
 
@@ -109,7 +109,7 @@ public:
 	bool Update() {
 		if (!Address) return false;
 
-		CEntityIdentity.Address = memory.Read<uintptr_t>(Address + cs2_dumper::schemas::client_dll::CEntityInstance::m_pEntity);
+		CEntityIdentity.Address = m.read<uintptr_t>(Address + cs2_dumper::schemas::client_dll::CEntityInstance::m_pEntity);
 		if (!CEntityIdentity.Address) return false;
 
 		return CEntityIdentity.Update();
@@ -118,18 +118,18 @@ public:
 
 static C_CEntityInstance GetEntity(int nIdx) noexcept {
 	C_CEntityInstance entity;
-	uintptr_t uListEntry = memory.Read<uintptr_t>(vars::cs2_entitylist + 8LL * ((nIdx & 0x7FFF) >> 9) + 16);
+	uintptr_t uListEntry = m.read<uintptr_t>(vars::cs2_entitylist + 8LL * ((nIdx & 0x7FFF) >> 9) + 16);
 	if (!uListEntry) return entity;
 
-	entity.Address = memory.Read<uintptr_t>(uListEntry + 120LL * (nIdx & 0x1FF));
+	entity.Address = m.read<uintptr_t>(uListEntry + 120LL * (nIdx & 0x1FF));
 	return entity;
 }
 
 static uintptr_t GetEntityAddress(uintptr_t address) noexcept {
-	uintptr_t uListEntry = memory.Read<uintptr_t>(vars::cs2_entitylist + 0x8 * ((address & 0x7FFF) >> 9) + 16);
+	uintptr_t uListEntry = m.read<uintptr_t>(vars::cs2_entitylist + 0x8 * ((address & 0x7FFF) >> 9) + 16);
 	if (!uListEntry) return 0;
 
-	return memory.Read<uintptr_t>(uListEntry + 120LL * (address & 0x1FF));
+	return m.read<uintptr_t>(uListEntry + 120LL * (address & 0x1FF));
 }
 
 class C_BaseEntity : public C_CEntityInstance {
@@ -152,30 +152,30 @@ public:
 	bool Update() {
 		if (!Address) return false;
 
-		this->CGameSceneNode = memory.Read<uintptr_t>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_pGameSceneNode);
+		this->CGameSceneNode = m.read<uintptr_t>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_pGameSceneNode);
 		if (!this->CGameSceneNode) return false;
 
-		this->m_iHealth = memory.Read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_iHealth);
-		this->m_lifeState = memory.Read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_lifeState);
-		this->m_bTakesDamage = memory.Read<bool>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_bTakesDamage);
-		this->m_flSpeed = memory.Read<float>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_flSpeed);
-		this->m_iTeamNum = memory.Read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_iTeamNum);
-		this->m_spawnflags = memory.Read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_spawnflags);
-		this->m_vecAbsVelocity = memory.Read<Vector_t>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_vecAbsVelocity);
+		this->m_iHealth = m.read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_iHealth);
+		this->m_lifeState = m.read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_lifeState);
+		this->m_bTakesDamage = m.read<bool>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_bTakesDamage);
+		this->m_flSpeed = m.read<float>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_flSpeed);
+		this->m_iTeamNum = m.read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_iTeamNum);
+		this->m_spawnflags = m.read<int>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_spawnflags);
+		this->m_vecAbsVelocity = m.read<Vector_t>(this->Address + cs2_dumper::schemas::client_dll::C_BaseEntity::m_vecAbsVelocity);
 
 		return true;
 	}
 
 	Vector_t GetBasePosition() const {
 		if (!CGameSceneNode) return Vector_t{ 0, 0, 0 };
-		return memory.Read<Vector_t>(CGameSceneNode + cs2_dumper::schemas::client_dll::CGameSceneNode::m_vecAbsOrigin);
+		return m.read<Vector_t>(CGameSceneNode + cs2_dumper::schemas::client_dll::CGameSceneNode::m_vecAbsOrigin);
 	}
 
 };
 
 constexpr std::uint32_t MAX_ENTITIES_IN_LIST = 512;
 constexpr std::uint32_t MAX_ENTITY_LISTS = 64;
-constexpr std::uint32_t MAX_TOTAL_ENTITIES = MAX_ENTITIES_IN_LIST * MAX_ENTITY_LISTS;
+constexpr std::uint32_t MAX_TOTAL_ENTITIES = MAX_ENTITIES_IN_LIST * MAX_ENTITY_LISTS; // 32kkk!!!!
 
 inline class c_entitysystem {
 public:
@@ -197,7 +197,7 @@ public:
 
 			csgo.csgo_update();
 
-			CLocalPlayer.Address = memory.Read<uintptr_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwLocalPlayerPawn);
+			CLocalPlayer.Address = m.read<uintptr_t>(vars::module_client + cs2_dumper::offsets::client_dll::dwLocalPlayerPawn);
 			if (!CLocalPlayer.Update()) {
 				CLocalPlayer.Address = 0;
 			}
@@ -222,23 +222,24 @@ public:
 				}
 
 				if (CEntityInstances[idx].CEntityIdentity.m_designerName == "cs_player_controller") {
-					uintptr_t m_hPawn = GetEntityAddress(memory.Read<uintptr_t>(CEntityInstances[idx].Address + cs2_dumper::schemas::client_dll::CBasePlayerController::m_hPawn));
+					uintptr_t m_hPawn = GetEntityAddress(m.read<uintptr_t>(CEntityInstances[idx].Address + cs2_dumper::schemas::client_dll::CBasePlayerController::m_hPawn));
 					if (!m_hPawn) continue;
 
 					C_BaseEntity BaseEntity{ m_hPawn };
 					if (!BaseEntity.Update()) continue;
 
-					uintptr_t observerServices = memory.Read<uintptr_t>(m_hPawn + cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_pObserverServices);
+					uintptr_t observerServices = m.read<uintptr_t>(m_hPawn + cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_pObserverServices);
 					if (observerServices) {
-						uint64_t observerTargetHandle = memory.Read<uint64_t>(observerServices + cs2_dumper::schemas::client_dll::CPlayer_ObserverServices::m_hObserverTarget);
+						uint64_t observerTargetHandle = m.read<uint64_t>(observerServices + cs2_dumper::schemas::client_dll::CPlayer_ObserverServices::m_hObserverTarget);
 						uintptr_t observerTarget = GetEntityAddress(observerTargetHandle);
 
 						if (observerTarget == CSLocalPlayerPawn && observerTarget != 0) {
-							std::string spectatorName = "Unknown";
-							uintptr_t controllerNameAddr = memory.Read<uintptr_t>(CEntityInstances[idx].Address + cs2_dumper::schemas::client_dll::CCSPlayerController::m_sSanitizedPlayerName);
+							std::string spectatorName{};
+							uintptr_t controllerNameAddr = m.read<uintptr_t>(CEntityInstances[idx].Address + cs2_dumper::schemas::client_dll::CCSPlayerController::m_sSanitizedPlayerName);
 							if (controllerNameAddr) {
 								char nameBuffer[MAX_PATH] = {};
-								if (memory.ReadRaw(controllerNameAddr, &nameBuffer, sizeof(nameBuffer))) {
+								if (m.read(controllerNameAddr, &nameBuffer, sizeof(nameBuffer))) {
+									nameBuffer[MAX_PATH] = '\0';
 									spectatorName = std::string(nameBuffer);
 								}
 							}
