@@ -304,4 +304,7 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="libarys\ImGui\freetype\objs\x64\freetype.lib" />
+  </ItemGroup>
 </Project>

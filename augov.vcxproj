@@ -72,15 +72,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>augov</TargetName>
-    <IncludePath>D:\repo\augov\libarys\ImGui\freetype\include;$(ProjectDir)ImGui\freetype\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\repo\augov\libarys\ImGui\freetype\objs\x64;$(ProjectDir)ImGui\freetype\objs\x64\;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\windows-10\Documents\GitHub\augov\libarys\ImGui\freetype\include;$(ProjectDir)ImGui\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\windows-10\Documents\GitHub\augov\libarys\ImGui\freetype\objs\x64;$(ProjectDir)ImGui\freetype\objs\x64\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\build</OutDir>
     <IntDir>$(ShortProjectName)\objects</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>augov</TargetName>
-    <IncludePath>D:\repo\augov\libarys\ImGui\freetype\include;$(ProjectDir)ImGui\freetype\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\repo\augov\libarys\ImGui\freetype\objs\x64;$(ProjectDir)ImGui\freetype\objs\x64\;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\windows-10\Documents\GitHub\augov\libarys\ImGui\freetype\include;$(ProjectDir)ImGui\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\windows-10\Documents\GitHub\augov\libarys\ImGui\freetype\objs\x64;$(ProjectDir)ImGui\freetype\objs\x64\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\build</OutDir>
     <IntDir>$(ShortProjectName)\objects</IntDir>
   </PropertyGroup>
@@ -245,6 +245,9 @@
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libarys\ImGui\freetype\objs\x64\freetype.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
